@@ -36,7 +36,9 @@ RUN sudo apt-get install -y nodejs
 # Add firebase CLI
 RUN npm install firebase-tools
 
+USER cirrus
+
 # Update Flutter so we can do web builds
-RUN sudo flutter channel beta
-RUN sudo flutter upgrade
-RUN sudo flutter config --enable-web
+RUN flutter channel beta
+RUN flutter upgrade
+RUN flutter config --enable-web
