@@ -35,3 +35,8 @@ RUN sudo apt-get install -y nodejs
 
 # Add firebase CLI
 RUN npm install firebase-tools
+
+# Update Flutter so we can do web builds
+RUN sudo flutter channel beta
+RUN sudo flutter upgrade
+RUN sudo flutter config --enable-web
