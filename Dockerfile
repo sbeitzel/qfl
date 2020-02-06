@@ -34,7 +34,7 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 RUN sudo apt-get install -y nodejs
 
 # Add firebase CLI
-RUN npm install firebase-tools
+RUN sudo npm install -g firebase-tools
 
 USER cirrus
 
