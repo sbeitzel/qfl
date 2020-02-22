@@ -35,6 +35,7 @@ RUN sudo apt-get install -y nodejs
 
 # Add firebase CLI
 RUN sudo npm install -g firebase-tools
+RUN sudo chown -R cirrus:cirrus /home/cirrus/.config/configstore
 
 USER cirrus
 
