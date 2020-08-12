@@ -35,11 +35,14 @@ RUN sudo apt-get install -y nodejs
 
 # Add firebase CLI
 RUN sudo npm install -g firebase-tools
+# this mkdir command shouldn't be necessary, as the directory is created by npm -- however, the Docker hub doesn't seem to make it.
+RUN sudo mkdir -p /home/cirrus/.config/configstore
 RUN sudo chown -R cirrus:cirrus /home/cirrus/.config/configstore
 
 USER cirrus
 
 # Update Flutter so we can do web builds
+WORKDIR /home/cirrus
 RUN flutter channel beta
 RUN flutter upgrade
 RUN flutter config --enable-web
