@@ -1,5 +1,8 @@
 FROM cirrusci/flutter:latest
 
+# Note that some of this stuff is cribbed from https://github.com/flutter/plugins/blob/master/.ci/Dockerfile
+# This is so that, when necessary, we can build Flutter plugins.
+
 RUN sudo apt-get update -y
 
 RUN sudo apt-get install -y --no-install-recommends gnupg
@@ -19,8 +22,7 @@ RUN yes | sdkmanager \
     "platforms;android-27" \
     "build-tools;27.0.3" \
     "extras;google;m2repository" \
-    "extras;android;m2repository" \
-    "system-images;android-21;default;armeabi-v7a"
+    "extras;android;m2repository"
 
 RUN yes | sdkmanager --licenses
 
@@ -35,14 +37,24 @@ RUN sudo apt-get install -y nodejs
 
 # Add firebase CLI
 RUN sudo npm install -g firebase-tools
-# this mkdir command shouldn't be necessary, as the directory is created by npm -- however, the Docker hub doesn't seem to make it.
-RUN sudo mkdir -p /home/cirrus/.config/configstore
-RUN sudo chown -R cirrus:cirrus /home/cirrus/.config/configstore
 
-USER cirrus
+# 2021-06-15: the base image seems to have a flutter that can't be modified;
+# updating doesn't work, nor does setting the channel, nor upgrading.
 
 # Update Flutter so we can do web builds
-WORKDIR /home/cirrus
-RUN flutter channel beta
-RUN flutter upgrade
+WORKDIR ${HOME}
+#RUN flutter channel beta
+#RUN flutter upgrade
 RUN flutter config --enable-web
+
+# Sometimes, CirrusCI runs things as user 'root' and sometimes as user 'cirrus'.
+# As of 20210614, no currus user is created, and everything runs as root.
+# This makes Flutter cranky, so we'll create a cirrus user now.
+#RUN sudo useradd -m -r -U cirrus
+
+#RUN mkdir -p /home/cirrus/.config/configstore
+#RUN chown -R cirrus:cirrus /home/cirrus/.config
+#RUN chown -R cirrus:cirrus /sdks/flutter
+
+#USER cirrus
+
